@@ -9,7 +9,7 @@ def main():
 
     from dotenv import load_dotenv
 
-    load_dontev()
+    load_dotenv()
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video_app.settings.dev')
     try:
