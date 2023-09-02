@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/temp_registration.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="registration-form-container">
+    <h1>Video App</h1>
+    <h1>アカウント作成</h1>
+    <form method="POST" class="registration-form">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="registration-form-error">{{ form.email.errors }}</div>
+        {% endif %}
+        <div class="registration-form-field">{{ form.email }}</div>
+        <button type="submit" class="registration-form-btn">認証コードを送信</button>
+    </form>
+    <p class="caption">アカウントをすでにお持ちですか？</p>
+    <a class="login-link" href="">ログイン</a>
+</div>
+{% endblock %}

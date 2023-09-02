@@ -1,0 +1,27 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/temp_registration_done.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="registration-form-container">
+    <h1>Video App</h1>
+    <h1>アカウント作成</h1>
+    <form method="POST" class="registration-form">
+        {% csrf_token %}
+        <p class="registration-form-text">{{ email }}に数字4桁の認証コードを送信しました。<br>下のテキストボックスに記入してください。</p>
+        {% if form.errors %}
+            <div class="registration-form-error">{{ form.code.errors }}</div>
+        {% endif %}
+        <div class="registration-form-field">{{ form.code }}</div>
+        <p class="caption">メールが届きませんか？</p>
+        <button class="regenerate-code-btn" type="button">再送する</button>
+        <button type="submit" class="registration-form-btn">認証してパスワード登録に進む</button>
+    </form>
+</div>
+{% endblock %}

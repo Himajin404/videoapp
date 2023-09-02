@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+
+<head>
+    <ling rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"></ling>
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+    {% block extra_style %}{% endblock %}
+</head>
+
+{% block content %}
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header__item">
+        <a href="" class="header__link">
+            <i class="fa-solid fa-xmark fa-2x"></i>
+        </a>
+    </div>
+</header>
+{% endblock %}
