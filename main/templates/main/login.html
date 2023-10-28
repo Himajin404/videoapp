@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="login-form-container">
+    <h1>Video App</h1>
+    <h1>ログイン</h1>
+    <form action="{% url 'login' %}" method="POST" class="login-form">
+        {% csrf_token %}
+        {% for error in form.non_field_errors %}
+        <div class="login-form-error">{{ error }}</div>
+        {% endfor %}
+        <div class="login-form-field">
+            {{ form.email }}
+        </div>
+        <div class="login-form-field">
+            {{ form.password }}
+        </div>
+        <button type="submit" class="login-form-btn">ログイン</button>
+    </form>
+    <p class="caption">
+        アカウントをお持ちでないですか？
+        <a href="{% url 'temp_registration' %}" class="registration-link">新規登録</a>
+    </p>
+    <br>
+    <a href="" class="reset-link">パスワードをリセットする</a>
+</div>
+{% endblock %}

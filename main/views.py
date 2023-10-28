@@ -1,3 +1,5 @@
+from typing import Any
+from django import http
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
@@ -10,12 +12,14 @@ from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.hashers import make_password
 
-from .forms import (
-    EmailForm,
-    RegistrationCodeForm,
-)
+from .forms import (EmailForm, PasswordForm, RegistrationCodeForm, EmailAuthenticationForm)
 from .models import AuthenticationCode
+from django.contrib.auth.views import LoginView
 
 User = get_user_model()
 
@@ -53,10 +57,7 @@ class TempRegistrationView(FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("temp_registration_done", kwargs={"token": self.token})
-
-class TempRegistrationDoneView(TemplateView):
-    template_name = "main/temp_registration_done.html"
+        return reverse("temp_registration_done", kwargs={"token": self.token})   
 
 class TempRegistrationDoneView(FormView):
     template_name = "main/temp_registration_done.html"
@@ -72,11 +73,61 @@ class TempRegistrationDoneView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["email"] = self.email
+        context["token"] = self.token
         return context
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs["email"] = self.email
+        return kwargs
 
     def get_success_url(self):
         return reverse("signup", kwargs={"token": self.token})
 
+
+@require_POST
+def resend_registration_email(request, token):
+    try:
+        email = signing.loads(token)
+    except signing.BadSignature:
+        return HttpResponseBadRequest("不正なURLです。")
+    form = RegistrationCodeForm
+    registration_send_email(email)
+    messages.success(request, "入力されたメールアドレスに送信しました。")
+    context = {
+        "form": form,
+        "email":email,
+        "token": token,
+    }
+    return render(request, "main/temp_registration_done.html", context)
+
+
 class SignUpView(TemplateView):
     template_name = "main/signup.html"
+    form_class = PasswordForm
+    success_url = reverse_lazy("login")
+
+    def dispatch(self, request, *args, **kwargs):
+        self.token = self.kwargs["token"]
+        try:
+            self.email = signing.loads(self.token)
+        except signing.BadSignature:
+            return HttpResponseBadRequest("不正なURLです")
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        password = form.cleaned_data["password"]
+        password = make_password(password)
+        User.objects.create(username="ゲスト", email=self.email, password=password)
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["email"] = self.email
+        return context
+
+
+class LoginView(TemplateView):
+    template_name = "main/login.html"
+    form_class = EmailAuthenticationForm
+    redirect_authticated_user = True

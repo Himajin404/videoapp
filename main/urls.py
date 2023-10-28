@@ -19,4 +19,14 @@ urlpatterns = [
         views.SignUpView.as_view(),
         name="signup",
     ),
+    path(
+        "temp_registration_done/<token>/resend",
+        views.resend_registration_email,
+        name="resend",
+    ),
+    path(
+        "login", 
+        views.LoginView.as_view(), 
+        name="login"
+    ),
 ]

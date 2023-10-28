@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/signup.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="registration-form-container">
+    <h1>Video App</h1>
+    <h1>アカウント作成を完了する</h1>
+    <form method="POST" class="registration-form">
+        {% csrf_token %}
+        {% if form.password.errors %}
+            {% for error in form.password.erros %}
+                <div class="registration-form-error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="registration-form-field">
+            <label for="{{ form.password.id_for_label }}"></label>
+            {{ form.password }}
+        </div>
+        <p>
+            <input type="checkbox" id="consent-chk" name="consent-chk" required>
+            <label for="consent-chk">
+                <a href=""><span class="color-green">利用規約</span>と<a href=""><span class="color-green">プライバシーポリシー</span></a>に同意する
+            </label>
+        </p>
+        <button type="submit" class="registration-form-btn">アカウント作成を完了</button>
+    </form>
+</div>
+{% endblock %}
