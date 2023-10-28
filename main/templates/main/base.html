@@ -3,20 +3,69 @@
 <html lang="ja">
 
 <head>
-    <ling rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"></ling>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動画共有アプリ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
     {% block extra_style %}{% endblock %}
 </head>
 
-{% block content %}
-{% endblock %}
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header__item">
+            <div class="header__title">
+                {% block header_title %}<a href="{% url 'home' %}">Video App</a>{% endblock %}
+            </div>
+            <a href="" class="header__link">
+                <i class="far fa-times-circle fa-2x upload-icon"></i>
+            </a>
+        </div>
+    </header>
+    {% endblock %}
 
-{% block header %}
-<header class="header">
-    <div class="header__item">
-        <a href="" class="header__link">
-            <i class="fa-solid fa-xmark fa-2x"></i>
-        </a>
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    {% if request.user.is_authenticated %}
+    <footer class="footer">
+        <div class="footer__item">
+            <a href="{% url 'home' %}" class="footer__link">
+                <div class="footer__icon"><i class="fas fa-home"></i></div>
+                <div class="footer__label">ホーム</div>
+            </a>
+        </div>
+        <div class="footer__item">
+            <a href="" class="footer__link">
+                <div class="footer__icon"><i class="fas fa-search"></i></div>
+                <div class="footer__label">検索</div>
+            </a>
+        </div>
+        <div class="footer__item">
+            <a href="" class="footer__link">
+                <div class="footer__icon"><i class="fas fa-user-friends"></i></div>
+                <div class="footer__label">フォロー中</div>
+            </a>
+        </div>
+        <div class="footer__item">
+            <a href="" class="footer__link">
+                <div class="footer__icon"><i class="fas fa-user"></i></div>
+                <div class="footer__label">アカウント</div>
+            </a>
+        </div>
+    </footer>
+    {% else %}
+    <div class="others">
+        <div class="rules">
+            <a href="" class="terms">利用規約</a>・
+            <a href="" class="policy">プライバシーポリシー</a>
+        </div>
     </div>
-</header>
-{% endblock %}
+    {% endif %}
+    {% endblock %}
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,11 +1,10 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
-from .models import AuthenticationCode
+from .models import AuthenticationCode, Video
 from django.contrib.auth import get_user_model, authenticate
-
+from django.utils.text import capfirst
 
 User = get_user_model()
 
@@ -36,15 +35,12 @@ class RegistrationCodeForm(forms.ModelForm):
         authentication_code_obj = get_object_or_404(
             AuthenticationCode, email=self.email
         )
-        print(3)
         authentication_code = authentication_code_obj.code
-        elapased_time = timezone.now() - authentication_code_obj.updated_at
+        elapased_time = timezone.now() - authentication_code_obj.Uploaded_at
         if elapased_time.seconds > 30:
             raise ValidationError("この認証コードは無効です。新しい認証コードを発行してください。")
-        print(2)
         if input_code != authentication_code:
             raise ValidationError("認証コードが正しくありません。")
-        print(1)
         return input_code
 
     class Meta:
@@ -101,3 +97,66 @@ class EmailAuthenticationForm(forms.Form):
 
     def get_user(self):
         return self.user_cache
+
+class PasswordResetEmailForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={"autofocus": True, "placeholder": "メールアドレス", "class": "form"}
+        ),
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        user = User.objects.filter(email=email)
+        if not user.exists():
+            raise ValidationError("このメールアドレスを使用しているユーザーは存在しません。")
+        return email    
+
+class PasswordResetForm(forms.Form):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput({"placeholder": "新しいパスワード", "class": "form"})
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput({"placeholder": "新しいパスワード(確認)", "class": "form"})
+    )
+
+    def clean(self):
+        new_password1 = self.cleaned_data["new_password1"]
+        new_password2 = self.cleaned_data["new_password2"]
+        if new_password1 != new_password2:
+            raise ValidationError("パスワードが一致しません")
+        return self.cleaned_data
+    
+class VideoUploadForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("title", "description", "thumbnail", "video")
+        widgets = {
+            "thumbnail": forms.FileInput(attrs={"class": "thumbnail-form"}),
+            "title": forms.Textarea(
+                attrs={
+                    "class": "title-form",
+                    "placeholder": "タイトルを入力",
+                    "rows": "2",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "description-form",
+                    "placeholder": "詳細文を入力",
+                }
+            ),
+            "video": forms.FileInput(
+                attrs={
+                    "class": "video-form",
+                    "accept": "video/*",
+                    "id": "video-upload-btn",
+                }
+            ),
+        }
+    
+class VideoSearchForm(forms.Form):
+    keyword = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "動画を検索", "class": "search-form"}),
+    )

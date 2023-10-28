@@ -2,7 +2,30 @@
 {% load static %}
 
 {% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/home.css' %}">
 {% endblock %}
 
 {% block content %}
+<div class="video-list-container">
+    {% for video in videos %}
+    <div class="video-information-container">
+        <a class="video-thumbnail-wrapper" href="">
+            <img src="{{ video.thumbnail.url }}">
+        </a>
+        <div class="video-detail-container">
+            <a href="" class="icon-wrapper">
+                <img src="{{ video.user.icon_url }}">
+            </a>
+            <div class="text-wrapper">
+                <p class="video-title">{{ video.title }}</p>
+                <div class="video-detail-wrapper">
+                    <p class="video-creator">{{ video.user.username }}</p>・
+                    <p class="video-views">{{ video.views_count }}回視聴</p>・
+                    <p class="video-uploaded-at">{{ video.get_elapsed_time }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

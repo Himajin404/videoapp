@@ -1,0 +1,162 @@
+.header__title {
+    margin: 0 auto;
+}
+
+.upload-btn {
+    color: #2B8F38;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.upload-form-container {
+    padding-top: 64px;
+}
+
+.thumbnail-form-field {
+    position: relative;
+}
+
+.thumbnail-form-field i {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px;
+    border-radius: 4px;
+}
+
+.thumbnail-form-field::before {
+    padding-top: 56%;
+    display: block;
+    content: "";
+}
+
+#thumbnail-preview {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.inner-block {
+    padding: 0 4vw;
+}
+
+.title-form {
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: white;
+    outline: none;
+    border: 1px solid white;
+    margin-bottom: 1.5rem;
+    resize: none;
+    width: 100%;
+}
+
+.title-form-lead {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.title-form-field {
+    margin-top: 0.75rem;
+}
+
+.title-form-counter {
+    position: absolute;
+    right: 0;
+}
+
+.title-form-label::after {
+    content: "必須";
+    color: red;
+    padding-left: 0.2rem;
+}
+
+.description-form-field {
+    margin-top: 0.75rem;
+}
+
+.description-form-lead {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.description-form-counter {
+    position: absolute;
+    right: 0;
+}
+
+.description-form {
+    font-size: 1.2rem;
+    border: 1px solid white;
+    outline: none;
+    resize: none;
+    width: 100%;
+}
+
+.video-form-field {
+    margin: 0.75rem 0;
+}
+
+.video-form-lead {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.video-form-label {
+    margin-bottom: 16px;
+}
+
+.video-form-label::after {
+    content: "必須";
+    color: red;
+    padding-left: 0.2rem;
+}
+
+.video-upload-btn {
+    display: block;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    border: 1px solid #2B8F38;
+    border-radius: 100vh;
+    color: #2B8F38;
+    background-color: white;
+    cursor: pointer;
+    text-align: center;
+}
+
+.video-form {
+    display: none;
+}
+
+/* プレビュー画像の高さを設定 */
+.thumbnail-form-field::before {
+    padding-top: 56%;
+    display: block;
+    content: "";
+}
+
+/* プレビュー画像の大きさと配置を設定 */
+#thumbnail-preview {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

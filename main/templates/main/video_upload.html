@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/video_upload.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header__item">
+        <a href="{% url 'home' %}" class="header__link">
+            <i class="fa-solid fa-xmark fa-2x"></i>
+        </a>
+        <div class="header__title">
+            {% block header_title %}詳細を追加{% endblock %}
+        </div>
+        <button type="submit" form="video-upload-form" class="upload-btn">投稿</button>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="upload-form-container">
+    <form method="POST" class="upload-form" enctype="multipart/form-data" id="video-upload-form">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="upload-form-error">{{ form.email.errors }}</div>
+        {% endif %}
+        <div class="thumbnail-form-field">
+            <img id="thumbnail-preview" src="{% static 'main/img/sample.jpeg' %}">
+            <label>
+                <i class="far fa-images"></i>
+                {{ form.thumbnail }}
+            </label>
+        </div>
+        <div class="video-form-field inner-block">
+            <p class="video-form-label">動画ファイル</p>
+            <label class="video-upload-btn" for="video-upload-btn">
+                動画を選択
+            </label>
+            {{ form.video }}
+        </div>
+        <hr>
+        <div class="title-form-field inner-block">
+            <div class="title-form-lead">
+                <label class="title-form-label" for="{{ form.title.label }}">タイトル</label>
+                <p class="title-form-counter"><span id="title-form-length">{{ video.title|length }}</span>/50</p>
+            </div>
+            {{ form.title }}
+        </div>
+        <hr>
+        <div class="description-form-field inner-block">
+            <div class="description-form-lead">
+                <label for="{{ form.description.label }}">詳細文</label>
+                <p class="description-form-counter"><span id="description-form-length">{{ video.description|length }}</span>/500</p>
+            </div>
+            {{ form.description }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

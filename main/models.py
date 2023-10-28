@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.templatetags.static import static
+from datetime import timedelta
+from django.utils import timezone
 
 class User(AbstractUser):
     email = models.EmailField("メールアドレス", unique=True)
@@ -16,6 +19,11 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.email}"
+    
+    def icon_url(self):
+        if self.icon:
+            return self.icon_url
+        return static("main/img/default_icon.png")
     
 class AuthenticationCode(models.Model):
     code = models.CharField("認証コード", max_length=4)
@@ -41,3 +49,21 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+    def get_elapsed_time(self):
+            delta = timezone.now() - self.uploaded_at
+
+            zero = timedelta()
+            one_hour = timedelta(hours=1)
+            one_day = timedelta(days=1)
+            one_week = timedelta(days=7)
+
+            if delta < zero:
+                raise ValueError("未来の時刻です。")
+            if delta < one_hour:
+                return f"{delta.seconds // 60} 分前"
+            elif delta < one_day:
+                return f"{delta.seconds // 3600} 時間前"
+            elif delta < one_week:
+                return f"{delta.days} 日前"
+            else:
+                return "1 週間以上前"

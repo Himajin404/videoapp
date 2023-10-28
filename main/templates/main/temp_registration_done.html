@@ -12,25 +12,16 @@
 <div class="registration-form-container">
     <h1>Video App</h1>
     <h1>アカウント作成</h1>
-    <form action="{% url 'temp_registration_done' token %}" method="POST" id="registration-form">
+    <form method="POST" class="registration-form">
         {% csrf_token %}
         <p class="registration-form-text">{{ email }}に数字4桁の認証コードを送信しました。<br>下のテキストボックスに記入してください。</p>
-        {% for message in messages %}
-        <div>{{ message }}</div>
-        {% endfor %}
         {% if form.errors %}
-        <div class="registration-form-error">{{ form.code.errors }}</div>
+            <div class="registration-form-error">{{ form.code.errors }}</div>
         {% endif %}
-        <div class="registration-form-field">
-            {{ form.code }}
-        </div>
+        <div class="registration-form-field">{{ form.code }}</div>
+        <p class="caption">メールが届きませんか？</p>
+        <button class="regenerate-code-btn" type="button">再送する</button>
+        <button type="submit" class="registration-form-btn">認証してパスワード登録に進む</button>
     </form>
-    <p class="caption">メールが届きませんか？</p>
-    <form action="{% url 'resend' token %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" value="{{ token }}" name="token">
-        <button class="regenerate-code-btn" type="submit"><span>再送する</span></button>
-    </form>
-    <button type="submit" class="registration-form-btn" form="registration-form">認証してパスワード登録に進む</button>
 </div>
 {% endblock %}
