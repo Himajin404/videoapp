@@ -142,7 +142,8 @@ STORAGES = {
         "BACKEND": "main.storage.MediaStorage",
     },
     "staticfiles": {
-        "BACKEND": "main.storage.StaticStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        # "BACKEND": "main.storage.StaticStorage",
     },
 }
 

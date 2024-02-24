@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/following.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="following">
+    <ul class="following-list">
+        {% for following in followings %}
+        <li class="following-list__item">
+            <a href="{% url 'account' following.id %}" class="following-list__link">
+                <img src="{{ following.icon_url }}" class="following-list__icon">
+                <p class="following-list__username">{{ following.username }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

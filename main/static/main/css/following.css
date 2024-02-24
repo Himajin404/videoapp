@@ -1,0 +1,35 @@
+.following {
+    padding-top: 48px;
+}
+
+.following-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.following-list__item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.following-list__link {
+    display: flex;
+    padding: 20px 0px;
+    justify-content: space-around;
+}
+
+.following-list__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    transform: translateX(15px);
+}
+
+.following-list__username {
+    text-align: center;
+    align-self: center;
+    width: 150px;
+    word-wrap: break-word;
+    margin: auto 0;
+}

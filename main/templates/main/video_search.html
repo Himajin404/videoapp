@@ -1,0 +1,80 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/video_search.css' %}">
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="video-container">
+    <div class="inner-block">
+        <form method="GET" class="search-container">
+            {{ form.keyword }}
+        </form>
+        <div class="button-container">
+            <button class="search-button active" data-btn-name="new">新着の動画</button>
+            <button class="search-button" data-btn-name="popular">人気の動画</button>
+        </div>
+    </div>
+    <div class="video-list-container">
+        {% for video in videos %}
+        <div class="video-information-container">
+            <a class="video-thumbnail-wrapper" href="">
+                <img src="{{ video.thumbnail.url }}">
+            </a>
+            <div class="video-detail-container">
+                <a href="{% url 'account' video.user.id %}" class="icon-wrapper">
+                    <img src="{{ video.user.icon_url }}">
+                </a>
+                <div class="text-wrapper">
+                    <p class="video-title">{{ video.title }}</p>
+                    <div class="video-detail-wrapper">
+                        <p class="video-creator">{{ video.user.username }}</p>・
+                        <p class="video-views">{{ video.views_count }}回視聴</p>・
+                        <p class="video-uploaded-at">{{ video.get_elapsed_time }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    function sendRequest() {
+        const xhr = new XMLHttpRequest();
+        // ...
+        searchButtonList.forEach(function (element, index) {
+            element.addEventListener("click", function (ev) {
+                // ...
+                // サーバーとの通信
+                const btnType = ev.target.dataset.btnName;
+                const queryString = new URLSearchParams({ "btnType": btnType, "keyword": "{{ keyword|escapejs }}" });
+                const requestPath = window.location + "?" + queryString;
+                xhr.open("GET", requestPath);
+                xhr.responseType = "document";
+                xhr.send();
+                xhr.onload = function() {
+                    const res = xhr.response;
+                    const videoList = document.querySelector(".video-list-container");
+                    const newDom = res.querySelectorAll(".video-information-container");
+                    const oldDom = document.querySelectorAll(".video-information-container");
+                    if (newDom) {
+                        oldDom.forEach((element) => {
+                            videoList.removeChild(element);
+                        });
+                        newDom.forEach((element) => {
+                            videoList.appendChild(element);
+                        });
+                    }
+                }
+            });
+        });
+    }
+    sendRequest();
+</script>
+{% endblock %}

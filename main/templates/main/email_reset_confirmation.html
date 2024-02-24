@@ -1,0 +1,50 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/email_reset_confirmation.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header__item">
+        <a href="javascript:window.history.back()" class="header__link">
+            <i class="fas fa-arrow-left fa-2x"></i>
+        </a>
+        <div class="header__title">
+            {% block header_title %}メールアドレスの変更{% endblock %}
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="email-reset-form-container">
+    <form action="{% url 'email_reset_confirmation' token %}" method="POST" id="email-reset-form">
+        {% csrf_token %}
+        <p class="email-reset-form-text">{{ email }}に数字4桁の認証コードを送信しました。<br>下のテキストボックスに記入してください。</p>
+        {% for message in messages %}
+        <div>{{ message }}</div>
+        {% endfor %}
+        {% if form.errors %}
+        <div class="email-reset-form-error">{{ form.code.errors }}</div>
+        {% endif %}
+        <div class="email-reset-form-field">
+            {{ form.code }}
+        </div>
+    </form>
+    <p class="caption">メールが届きませんか？</p>
+    <form action="{% url 'resend' token %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="{{ token }}" name="token">
+        <button class="regenerate-code-btn" type="submit"><span>再送する</span></button>
+    </form>
+    <button type="submit" class="email-reset-form-btn" form="email-reset-form">認証してパスワード登録に進む</button>
+    <p class="cancel-link">
+        <a href="javascript:window.history.back()">キャンセル</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -7,13 +7,14 @@
 
 {% block content %}
 <div class="video-list-container">
+
     {% for video in videos %}
     <div class="video-information-container">
-        <a class="video-thumbnail-wrapper" href="">
+        <a class="video-thumbnail-wrapper" href="{% url 'video_play' video.id %}">
             <img src="{{ video.thumbnail.url }}">
         </a>
         <div class="video-detail-container">
-            <a href="" class="icon-wrapper">
+            <a href="{% url 'account' video.user.id %}" class="icon-wrapper">
                 <img src="{{ video.user.icon_url }}">
             </a>
             <div class="text-wrapper">

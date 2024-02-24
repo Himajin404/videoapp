@@ -1,0 +1,321 @@
+.account {
+    padding: 48px 4vw 64px 4vw;
+}
+
+.account__icon {
+    text-align: center;
+}
+
+.account__icon img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 24px;
+}
+
+.account-username {
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 30px;
+    margin: 2px auto;
+    word-wrap: break-word;
+    width: 100%;
+    text-align: center;
+}
+
+.account-detail {
+    display: flex;
+    justify-content: center;
+}
+
+.account-detail p {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    margin: 2px 0;
+}
+
+.account-profile {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    margin-top: 4px;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.more-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.account-settings-btns {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-edit-profile-btn {
+    display: block;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 1.25px;
+    color: #2B8F38;
+    border: 1px solid #2B8F38;
+    padding: 8.5px 70px;
+    border-radius: 19px;
+}
+
+.account-settings-btn {
+    padding-left: 10px;
+}
+
+.account-video-btns {
+    display: flex;
+    margin-top: 20px;
+}
+
+.video-container {
+    padding-top: 22px;
+}
+
+.video-list-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.video-information-container {
+    display: flex;
+    width: 90%;
+}
+
+.video-thumbnail-wrapper {
+    position: relative;
+    width: 50%;
+}
+
+.video-thumbnail-wrapper::before {
+    padding-top: 56%;
+    display: block;
+    content: "";
+}
+
+.video-thumbnail-wrapper img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.video-detail-container {
+    padding: 0 4vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.video-detail-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.account-follow-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+    position: relative;
+}
+
+.account-follow-btns form {
+    width: 100%;
+}
+
+.account-following-btn {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 1.25px;
+    color: #2B8F38;
+    border: 1px solid #2B8F38;
+    padding: 8.5px 80px;
+    border-radius: 19px;
+    background-color: white;
+    width: 100%;
+}
+
+.account-follow-btn {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 1.25px;
+    color: #FFFFFF;
+    border: 1px solid #2B8F38;
+    background-color: #2B8F38;
+    padding: 8.5px 80px;
+    border-radius: 19px;
+    width: 100%;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    /* 以下を追加 */
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    height: 0;
+    transform: translateY(100%);
+    transition: transform 200ms;
+    z-index: -1;
+    box-sizing: border-box;
+}
+
+.settings-title-container {
+    display: flex;
+    align-items: center;
+    background: rgba(249, 249, 249, 0.79);
+}
+
+.settings-title-container i {
+    width: 10%;
+    text-align: center;
+}
+
+.settings-title-container h1 {
+    width: 70%;
+    text-align: initial;
+}
+
+.settings-container {
+    padding: 0 12px;
+}
+
+.settings-container h2 {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #2B8F38;
+}
+
+.page-visible {
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 1;
+    position: fixed;
+}
+
+.email-change {
+    display: flex;
+    align-items: center;
+}
+
+.email-change i,
+.password-change i {
+    width: 10%;
+    text-align: center;
+}
+
+.email-change-text,
+.password-change-text {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+}
+
+.password-change-text a {
+    margin: 16px 0;
+}
+
+.password-change {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.rules {
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.rules a {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 0.25px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.logout {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.logout-link {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 1.25px;
+    color: #2B8F38;
+    background: none;
+    border: none;
+}
+
+.account-delete {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-delete-text,
+.account-delete-link {
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 0.25px;
+}
+
+.account-delete-text {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.account-delete-link {
+    color: #2B8F38;
+    margin-left: 10px;
+}

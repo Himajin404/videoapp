@@ -1,10 +1,13 @@
+from typing import Any, Optional
 from django import forms
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from .models import AuthenticationCode, Video
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.text import capfirst
+from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
 
@@ -160,3 +163,59 @@ class VideoSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"placeholder": "動画を検索", "class": "search-form"}),
     )
+
+class ViewsCountForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("views_count",)
+
+# class AccountForm(forms.Form):
+#     class Meta:
+#         model = User
+
+class PasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].widget.attrs["class"] = "old_password"
+        self.fields["new_password1"].widget.attrs["class"] = "new_password1"
+        self.fields["new_password2"].widget.attrs["class"] = "new_password2"
+        self.fields["old_password"].widget.attrs["placeholder"] = "現在のパスワード"
+        self.fields["new_password1"].widget.attrs["placeholder"] = "新しいパスワード"
+        self.fields["new_password2"].widget.attrs["placeholder"] = "新しいパスワード（確認）"
+
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("icon", "username", "profile")
+        labels = {
+            "username": "ユーザー名",
+            "profile": "紹介文",
+        }
+        widgets = {"icon": forms.FileInput(attrs={"onchange": "previewImage(this);"}),
+                   "username": forms.TextInput(
+                attrs={"onkeyup": "showUsernameLength(value);"}
+            ),
+            "profile": forms.TextInput(attrs={"onkeyup": "showProfileLength(value);"}),
+        }
+
+
+class VideoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ("thumbnail", "title", "description")
+        widgets = {
+            "thumbnail": forms.FileInput(attrs={"class": "thumbnail-form"}),
+            "title": forms.Textarea(
+                attrs={
+                    "class": "title-form",
+                    "rows": "2",
+                    "onkeyup": "showTitleLength(value);",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "description-form",
+                    "onkeyup": "showDescriptionLength(value);",
+                }
+            ),
+        }

@@ -3,6 +3,7 @@ from django.db import models
 from django.templatetags.static import static
 from datetime import timedelta
 from django.utils import timezone
+import os
 
 class User(AbstractUser):
     email = models.EmailField("メールアドレス", unique=True)
@@ -67,3 +68,6 @@ class Video(models.Model):
                 return f"{delta.days} 日前"
             else:
                 return "1 週間以上前"
+
+    def file_name(self):
+        return os.path.splitext(os.path.basename(self.video.name))[0]

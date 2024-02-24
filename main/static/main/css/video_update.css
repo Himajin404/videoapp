@@ -1,0 +1,145 @@
+.header__title {
+    margin: 0 auto;
+}
+
+.delete-btn {
+    color: #2B8F38;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+}
+
+.update-form-container {
+    padding-top: 64px;
+}
+
+.thumbnail-form-field {
+    position: relative;
+}
+
+.thumbnail-form-field i {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px;
+    border-radius: 4px;
+}
+
+.thumbnail-form-field::before {
+    padding-top: 56%;
+    display: block;
+    content: "";
+}
+
+#thumbnail-preview {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.inner-block {
+    padding: 0 4vw;
+}
+
+.title-form-field {
+    margin-top: 0.75rem;
+}
+
+.title-form {
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: white;
+    outline: none;
+    border: 1px solid white;
+    margin-bottom: 1.5rem;
+    resize: none;
+    width: 100%;
+}
+
+.title-form-lead {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.title-form-counter {
+    position: absolute;
+    right: 0;
+}
+
+.title-form-label::after {
+    content: "必須";
+    color: red;
+    padding-left: 0.2rem;
+}
+
+.description-form-field {
+    margin-top: 0.75rem;
+}
+
+.description-form-lead {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.description-form-counter {
+    position: absolute;
+    right: 0;
+}
+
+.description-form {
+    font-size: 1.2rem;
+    border: 1px solid white;
+    outline: none;
+    resize: none;
+    width: 100%;
+}
+
+.update-form-btn {
+    width: 100%;
+    height: 36px;
+    background-color: #2B8F38;
+    border: 1px solid #2B8F38;
+    color: white;
+    border-radius: 100vh;
+}
+
+.video-upload-btn {
+    padding: 10px 40px;
+    color: #ffffff;
+    background-color: #2B8F38;
+    cursor: pointer;
+}
+
+.form-title {
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 50px;
+}
+
+.popup-btn-group {
+    display: flex;
+    margin: 0 auto;
+    justify-content: flex-end;
+}
+
+.cancel-btn {
+    color: #2B8F38;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+}

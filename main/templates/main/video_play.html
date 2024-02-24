@@ -1,0 +1,87 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/video_play.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="video-player-container">
+    <video id="video" controls width="100%"></video>
+
+    <div class="video-information-container">
+        <p class="video-title">{{ video.title }}</p>
+        <div class="video-detail-wrapper">
+            <p class="video-views">{{ video.views_count }}回視聴&emsp;</p>
+            <p class="uploaded-elapsed-time">{{ video.get_elapsed_time }}&emsp;</p>
+            <p class="video-uploaded-at">{{ video.uploaded_date|date:"Y/m/d" }}</p>
+        </div>
+        <a class="user-information-wrapper" href="{% url 'account' video.user.id %}">
+            <img src="{{ video.user.icon_url }}">
+            <p class="video-creator">{{ video.user.username }}</p>
+        </a>
+        <hr noshade size="1">
+        <div class="description-wrapper">
+            <p class="video-description">{{ video.description|escapejs }}</p>
+            <p class="more-button">もっと見る...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    const video = document.getElementById("video");
+    const fileName = "{{ video.file_name }}"
+    const playList = fileName + "_converted.m3u8"
+    const videoSrc = "https://d3s16gvch33zhi.cloudfront.net/" + fileName + "/" + playList;
+    if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = videoSrc;
+    }
+    const csrftoken = "{{ csrf_token }}";
+    
+    function viewsCount() {
+        let viewCount = "{{ video.views_count }}";
+        const url = window.location.href;
+        const video = document.getElementById("video");
+        video.addEventListener("play", function(event) {
+            viewCount++;
+            const xhr = new XMLHttpRequest();
+            const data = new FormData();
+            data.append("views_count", viewCount);
+            const url = window.location;
+            xhr.open("POST", url);
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.send(data);
+        }, { once: true });
+    };
+    
+    viewMoreButton();
+    viewsCount();
+
+    function viewMoreButton () {
+        const moreBtn = document.getElementById("more-button");
+        const videoDescription = document.getElementById("video-description");
+        const videoDescriptionStr = videoDescription.textContent;
+        const videoDescriptionLength = videoDescriptionStr.length;
+        if (videoDescriptionLength > 200) {
+            videoDescription.textContent = videoDescriptionStr.substring(0, 200) + "...";
+            moreBtn.addEventListener("click", function (ev) {
+                videoDescription.textContent = "{{ video.description|escapejs }}";
+                moreBtn.style.display = "none";
+            });
+        } else {
+            moreBtn.style.display = "none";
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        viewMoreButton();
+    });
+</script>
+{% endblock %}

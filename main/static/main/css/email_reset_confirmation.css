@@ -1,0 +1,61 @@
+.header__title {
+    margin: 0 auto;
+}
+
+.email-reset-form-container {
+    padding-top: 200px;
+    padding-left: 4vw;
+    padding-right: 4vw;
+}
+
+.form {
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    appearance: none;
+    border: 1px solid #ccc;
+    font-size: 120%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+
+.email-reset-form-field {
+    padding-bottom: 40px;
+}
+
+.email-reset-form-text {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.email-reset-form-btn {
+    width: 100%;
+    height: 36px;
+    background-color: #2B8F38;
+    color: white;
+    border-radius: 100vh;
+    margin: 30px 0;
+}
+
+.caption {
+    display: inline;
+}
+
+.cancel-link {
+    text-align: center;
+}
+
+.cancel-link a {
+    color: #2B8F38;
+}
+
+.registration-link {
+    padding-bottom: 24px;
+}
+
+.regenerate-code-btn {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #2B8F38;
+}

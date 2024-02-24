@@ -145,18 +145,8 @@
     display: none;
 }
 
-/* プレビュー画像の高さを設定 */
-.thumbnail-form-field::before {
-    padding-top: 56%;
-    display: block;
-    content: "";
-}
-
-/* プレビュー画像の大きさと配置を設定 */
-#thumbnail-preview {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.active {
+    border: 1px solid white;
+    background-color: #212121;
+    color: white;
 }

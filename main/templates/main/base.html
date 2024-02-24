@@ -18,7 +18,7 @@
             <div class="header__title">
                 {% block header_title %}<a href="{% url 'home' %}">Video App</a>{% endblock %}
             </div>
-            <a href="" class="header__link">
+            <a href="{% url 'video_upload' %}" class="header__link">
                 <i class="far fa-times-circle fa-2x upload-icon"></i>
             </a>
         </div>
@@ -38,34 +38,33 @@
             </a>
         </div>
         <div class="footer__item">
-            <a href="" class="footer__link">
+            <a href="{% url 'video_search' %}" class="footer__link">
                 <div class="footer__icon"><i class="fas fa-search"></i></div>
                 <div class="footer__label">検索</div>
             </a>
         </div>
         <div class="footer__item">
-            <a href="" class="footer__link">
+            <a href="{% url 'following' %}" class="footer__link">
                 <div class="footer__icon"><i class="fas fa-user-friends"></i></div>
                 <div class="footer__label">フォロー中</div>
             </a>
         </div>
         <div class="footer__item">
-            <a href="" class="footer__link">
+            <a href="{% url 'account' request.user.id %}" class="footer__link">
                 <div class="footer__icon"><i class="fas fa-user"></i></div>
                 <div class="footer__label">アカウント</div>
             </a>
         </div>
     </footer>
-    {% else %}
-    <div class="others">
-        <div class="rules">
-            <a href="" class="terms">利用規約</a>・
-            <a href="" class="policy">プライバシーポリシー</a>
-        </div>
+{% else %}
+<div class="others">
+    <div class="rules">
+        <a href="" class="terms">利用規約</a>・
+        <a href="" class="policy">プライバシーポリシー</a>
     </div>
-    {% endif %}
-    {% endblock %}
-    {% block extra_js %}{% endblock %}
+</div>
+{% endif %}
+{% endblock %}
+{% block extra_js %}{% endblock %}
 </body>
-
 </html>

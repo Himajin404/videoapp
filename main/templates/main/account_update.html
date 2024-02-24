@@ -1,0 +1,56 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/account_update.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header__item">
+        <a href="#" onclick="window.history.back(); return false;" class="header__link">
+            <i class="fas fa-arrow-left fa-2x"></i>
+        </a>
+        <div class="header__title">
+            {% block header_title %}プロフィールを編集{% endblock %}
+        </div>
+        <button type="submit" form="edit-form">保存</button>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="edit-profile">
+    <form action="{% url 'account_update' %}" method="POST" id="edit-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="edit-form-containers">
+            <div class="edit-icon">
+                {{ form.icon }}
+                <div class="account__icon">
+                    <img id="preview" src="{{object.icon_url}}">
+                </div>
+                <i class="fa-regular fa-image"></i>
+            </div>
+            <div class="edit-username-container">
+                <div class="edit-username-text">
+                    {{ form.username.label }}
+                    <p class="required">必須</p>
+                </div>
+                <p class="edit-username-counter"><span id="edit-username-count">{{ request.user.username|length }}</span>/50</p>
+            </div>
+            {{ form.username }}
+            <div class="edit-profile-container">
+                <div class="edit-profile-text">
+                    {{ form.profile.label }}
+                </div>
+                <p class="edit-profile-counter"><span id="edit-profile-count">{{ request.user.profile|length }}</span>/500</p>
+            </div>
+            {{ form.profile }}
+        </table>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'main/js/account_update.js' %}"></script>
+{% endblock %}

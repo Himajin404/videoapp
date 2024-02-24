@@ -1,0 +1,45 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/email_reset.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header__item">
+        <a href="javascript:window.history.back()" class="header__link">
+            <i class="fas fa-arrow-left fa-2x"></i>
+        </a>
+        <div class="header__title">
+            {% block header_title %}メールアドレスの変更{% endblock %}
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="email-reset-form-container">
+    <p>アカウントのメールアドレス</p>
+    <p>{{ user.email }}</p>
+    <form method="POST" class="email-reset-form">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="email-reset-form-error">{{ form.email.errors }}</div>
+        {% endif %}
+        <div class="email-reset-form-field">
+            {{ form.email }}
+        </div>
+        <div class="btn-container">
+            <button type="submit" class="email-reset-form-btn">認証コードを送信</button>
+            <p class="cancel-link">
+                <a href="javascript:window.history.back()">キャンセル
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

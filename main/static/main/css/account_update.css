@@ -1,0 +1,147 @@
+.header__item {
+    display: flex;
+    align-items: center;
+    background: rgba(249, 249, 249, 0.79);
+}
+
+.header__item i {
+    width: 10%;
+    text-align: center;
+}
+
+.header__item h1 {
+    width: 70%;
+    text-align: initial;
+}
+
+.header__item button {
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 1.25px;
+    color: #2B8F38;
+    border: none;
+    background: transparent;
+}
+
+.edit-profile {
+    padding-top: 70px;
+}
+
+.edit-icon {
+    position: relative;
+    height: 90px;
+    display: flex;
+    align-items: center;
+}
+
+#id_icon {
+    /* 写真のプレビューが見れるように透過 */
+    opacity: 0;
+    /* フォームが触れられるように調整 */
+    z-index: 1;
+    /* 円形に */
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    /* プレビューと被さるように位置を調整 */
+    position: absolute;
+    top: 24px;
+    left: 12px;
+}
+
+.account__icon {
+    opacity: 0.5;
+    /* 円形に */
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    /* フォームと被さるように位置を調整 */
+    position: absolute;
+    top: 24px;
+    left: 12px;
+}
+
+#preview {
+    height: 56px;
+}
+
+.edit-icon i {
+    position: relative;
+    top: 7px;
+    left: 29px;
+    font-size: 24px;
+    color: #FFFFFF;
+}
+
+#file-upload-button {
+    color: #2B8F38;
+    border: none;
+}
+
+.edit-username-container,
+.edit-profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+}
+
+.edit-username-text,
+.edit-profile-text {
+    display: flex;
+    align-items: center;
+}
+
+.required {
+    padding-left: 4px;
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    color: #CD241B;
+}
+
+:focus {
+    outline: none;
+}
+
+#id_username {
+    border: none;
+    width: 100%;
+    padding: 0 12px 24px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 28px;
+    letter-spacing: 0.15px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+#id_profile {
+    border: none;
+    width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+
+    font-family: 'Noto Sans JP';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
+    letter-spacing: 0.25px;
+    color: rgba(0, 0, 0, 0.87);
+}

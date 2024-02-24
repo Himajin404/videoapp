@@ -1,5 +1,6 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from django import http
+from django.db import models
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
@@ -8,7 +9,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.views.generic import TemplateView, FormView, ListView
+from django.views.generic import TemplateView, FormView, ListView, DetailView, DeleteView, UpdateView
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -24,9 +25,19 @@ from .forms import (EmailForm,
                     PasswordResetEmailForm, 
                     PasswordResetForm, 
                     VideoUploadForm, 
-                    VideoSearchForm,)
+                    VideoSearchForm,
+                    ViewsCountForm,
+                    # PlayVideoForm
+                    PasswordChangeForm,
+                    AccountUpdateForm,
+                    VideoUpdateForm,
+)
 from .models import AuthenticationCode, Video
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import Count, Prefetch, Q, Case, QuerySet, When
+from django.views import View
+from django.contrib.auth import views as auth_views
+from django.views.decorators.http import require_POST
 
 
 User = get_user_model()
@@ -58,6 +69,8 @@ def registration_send_email(email):
     from_email = None
     recipient_list = [email]
     send_mail(subject, message, from_email, recipient_list)
+
+
 
 class TempRegistrationView(FormView):
     template_name = "main/temp_registration.html"
@@ -249,14 +262,226 @@ class VideoUploadView(LoginRequiredMixin, FormView):
         video.user = self.request.user
         video.save()
         return super().form_valid(form)
-
-class SearchVideoView(FormView):
+    
+class VideoSearchView(FormView, ListView):
     template_name = "main/video_search.html"
     model = Video
+    form_class = VideoSearchForm
     context_object_name = "videos"
 
+    def get(self, request, *args, **kwargs):
+        self.form = VideoSearchForm(self.request.GET)
+        return super().get(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context["form"] = self.form
+            if self.form.is_valid():
+                context["keyword"] = self.form.cleaned_data["keyword"]
+            return context
+    
     def get_queryset(self):
         queryset = super().get_queryset().order_by("-uploaded_at")
+        print(queryset)
         if self.form.is_valid():
             keyword = self.form.cleaned_data["keyword"]
+        if keyword:
+            queryset = queryset.filter(title__icontains=keyword) #icontains = keyword included in the title
+
+        if "btnType" in self.request.GET:
+            btn_type = self.request.GET.get("btnType")
+            if btn_type == "new":
+                queryset = queryset.order_by("-uploaded_at")[:5]
+            else:
+                queryset = queryset.order_by("-views_count")[:5]
+        return queryset
     
+class PlayVideoView(LoginRequiredMixin, DetailView):
+    template_name = "main/video_play.html"
+    model = Video
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     queryset = queryset.filter(pk=self.kwargs["pk"])
+    #     return queryset
+    
+    def post(self, request, *args, **kwargs):
+        views_count_form = ViewsCountForm(request.POST)
+        if views_count_form.is_valid():
+            views_count = views_count_form.cleaned_data["views_count"]
+            video = Video.objects.filter(pk=kwargs["pk"])
+            video.update(views_count=views_count)
+        return redirect("video_play", kwargs["pk"])
+    
+class AccountView(LoginRequiredMixin, DetailView):
+    template_name = "main/account.html"
+    model = User
+    context_object_name = "user"
+
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        queryset = queryset.prefetch_related(
+            Prefetch("videos", queryset=Video.objects.order_by("-uploaded_at"))
+        ).annotate(
+            follower_count=Count("followed", distinct=True),
+            video_count=Count("videos", distinct=True)
+        )
+        if self.kwargs["pk"] != self.request.user.pk:
+            follow_list = self.request.user.follow.all().values_list("id", flat=True)
+            queryset = queryset.annotate(
+                is_follow=Case(
+                    When(id__in=follow_list, then=True),
+                    default=False,
+                )
+            )
+        return queryset
+
+class FollowingView(LoginRequiredMixin, ListView):
+    template_name = "main/following.html"
+    context_object_name = "followings"
+
+    def get_queryset(self):
+        queryset = get_object_or_404(User, id=self.request.user.id).follow.all()
+        return queryset
+
+class FollowView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        follow = User.objects.get(pk=kwargs["pk"])
+        request.user.follow.add(follow)
+        return redirect("account", kwargs["pk"])
+    
+class UnfollowView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        unfollow = User.objects.get(pk=kwargs["pk"])
+        request.user.follow.remove(unfollow)
+        return redirect("account", kwargs["pk"])
+
+class TermsView(LoginRequiredMixin, TemplateView):
+    template_name = "main/terms.html"
+
+class PrivacyPolicyView(LoginRequiredMixin, TemplateView):
+    template_name = "main/privacy_policy.html"
+
+class LogoutView(LogoutView):
+    pass
+
+def email_reset_send_email(email):
+    random_code = generate_random_code(email)
+    context = {
+        "email": email,
+        "random_code": random_code,
+    }
+    subject = "メール再設定について"
+    message = render_to_string("mail_text/email_reset.txt", context)
+    from_email = None
+    recipient_list = [email]
+    send_mail(subject, message, from_email, recipient_list)
+
+class EmailResetView(LoginRequiredMixin, FormView):
+    template_name = "main/email_reset.html"
+    form_class = EmailForm
+
+    def form_valid(self, form):
+        new_email = form.cleaned_data["email"]
+        self.token = signing.dumps(new_email)
+        email_reset_send_email(new_email)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("email_reset_confirmation", kwargs={"token": self.token})
+
+class EmailResetConfirmationView(LoginRequiredMixin, FormView):
+    template_name = "main/email_reset_confirmation.html"
+    form_class = RegistrationCodeForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.token = self.kwargs["token"]
+        try:
+            self.new_email = signing.loads(self.token)
+        except signing.BadSignature:
+            return HttpResponseBadRequest("不正なURLです。")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = User.objects.filter(id=self.request.user.id)
+        user.update(email=self.new_email)
+        return super().form_valid(form)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs["email"] = self.new_email
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["email"] = self.new_email
+        context["token"] = self.token
+        return context
+
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.id})
+
+@require_POST
+def resend_email_reset_email(request, token):
+    try:
+        email = signing.loads(token)
+    except signing.BadSignature:
+        return HttpResponseBadRequest("不正なURLです。")
+    form = RegistrationCodeForm
+    email_reset_send_email(email)
+    messages.success(request, "入力されたメールアドレスに送信しました。")
+    context = {
+        "form": form,
+        "email": email,
+        "token": token,
+    }
+    return render(request, "main/email_reset_confirmation.html", context)
+
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = "main/password_change.html"
+    form_class = PasswordChangeForm
+
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.pk})
+    
+class AccountDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = "main/account_delete.html"
+    model = User
+    context_object_name = "user"
+    success_url = reverse_lazy("account_delete_done")
+
+    def get_object(self):
+        return self.request.user
+
+class AccountDeleteDoneView(TemplateView):
+    template_name = "main/account_delete_done.html"
+
+class AccountUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = AccountUpdateForm
+    template_name = "main/account_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("account", kwargs={"pk": self.request.user.pk})
+
+    def get_object(self):
+        return self.request.user
+    
+class VideoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Video
+    form_class = VideoUpdateForm
+    template_name = "main/video_update.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(user=self.request.user)
+        return queryset
+    
+    def get_success_url(self):
+        return reverse("account", kwargs={"pk": self.request.user.pk})
+    
+@require_POST
+def video_delete(request, pk):
+    video = get_object_or_404(Video, user=request.user, pk=pk)
+    video.delete()
+    return redirect("account", request.user.id)
+

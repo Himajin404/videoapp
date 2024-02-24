@@ -15,6 +15,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video_app.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video_app.settings.prod')
 
 application = get_wsgi_application()

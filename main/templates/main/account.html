@@ -1,0 +1,122 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account">
+    <div class="account__icon">
+        <img src="{{ user.icon_url }}">
+    </div>
+    <h2 class="account-username">
+        {{ user.username }}
+    </h2>
+    <div class="account-detail">
+        <div class="account-detail-video-count">
+            <p>{{ user.video_count }} 本の動画</p>
+        </div>
+        <p>・</p>
+        <div class="account-detail-following">
+            <p>{{ user.follower_count }} 人のフォロワー</p>
+        </div>
+    </div>
+    <div class="account-profile">
+        <p class="account-profile-text">{{ user.profile|default:"まだ登録されていません" }}</p>
+        <p class="more-button">もっと見る...</p>
+    </div>
+    {% if user.id == request.user.id %}
+    <div class="account-settings-btns">
+        <a href="{% url 'account_update' %}" class="account-edit-profile-btn">プロフィールを編集</a>
+        <div class="account-settings-btn"><i class="fa-solid fa-gear"></i></div>
+        </div>
+    {% else %}
+    <div class="account-follow-btns">
+        {% if object.is_follow %}
+        <form action="{% url 'unfollow' object.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="account-following-btn">フォロー中</button>
+        </form>
+        {% else %}
+        <form action="{% url 'follow' object.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="account-follow-btn">フォロー</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="video-container">
+        {% for video in user.videos.all %}
+        <div class="video-list-container">
+            <a class="video-information-container" href="{% url 'video_play' video.id %}">
+                <div class="video-thumbnail-wrapper">
+                    <img src="{{ video.thumbnail.url }}">
+                </div>
+                <div class="video-detail-container">
+                    <div class="text-wrapper">
+                        <p class="video-title">{{ video.title }}</p>
+                        <div class="video-detail-wrapper">
+                            <p class="video-views">{{ video.views_count }}回視聴</p>・
+                            <p class="video-uploaded-at">{{ video.get_elapsed_time }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div>
+                <div>
+                    <a href="{% url 'video_update' video.pk %}"><i class="fas fa-pencil-alt"></i></a>
+                </div>
+            </div>
+            {% empty %}
+            <p>アップロードされた動画はありません</p>
+            {% endfor %}
+    </div>
+</div>
+{% if user.id == request.user.id %}
+{# 設定画面 #}
+<div class="settings">
+    <div class="settings-title-container">
+        <i class="fa-solid fa-xmark fa-2x settings-close"></i>
+        <h1>設定</h1>
+    </div>
+    <div class="settings-container">
+        <div class="account-settings">
+            <h2>アカウントの設定</h2>
+            <div class="email-change">
+                <i class="fa-regular fa-envelope"></i>
+                <div class="email-change-text">
+                    <a href="">メールアドレスの変更</a>
+                </div>
+            </div>
+            <div class="password-change">
+                <i class="fa-solid fa-asterisk"></i>
+                <div class="password-change-text">
+                    <a href="">パスワードの変更</a>
+                </div>
+            </div>
+        </div>
+        <div class="others">
+            <div class="rules">
+                <a href="{% url 'terms' %}" class="terms">利用規約</a>・
+                <a href="{% url 'privacy_policy' %}" class="policy">プライバシーポリシー</a>
+            </div>
+            <div class="logout">
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-link">ログアウト</button>
+                </form>
+            </div>
+            <div class="account-delete">
+                <p class="account-delete-text">アカウントの削除は</p>
+                <a href="" class="account-delete-link">こちら</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'main/js/account.js' %}"></script>
+{% endblock %}

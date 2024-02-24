@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'main/css/account_delete_done.css' %}">
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="account_delete_done">
+    <h1>Video App</h1>
+    <h2>アカウントを削除しました</h2>
+    <p>タブを閉じても大丈夫です。</p>
+    <div class="return">
+        <p><a href="{% url 'login' %}">ログイン画面へ戻る</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

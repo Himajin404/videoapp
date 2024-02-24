@@ -1,0 +1,25 @@
+{% block content %}
+{# ... #}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 「もっと見るボタン」
+        const moreBtn = document.querySelector(".more-button");
+        const accountProfile = document.querySelector(".account-profile-text");
+        const accountProfileStr = accountProfile.textContent;
+        const accountProfileLength = accountProfileStr.length;
+        if (accountProfileLength > 200) {
+            accountProfile.textContent = accountProfileStr.substring(0, 200) + "...";
+            moreBtn.addEventListener("click", function (ev) {
+                accountProfile.textContent = "{{ user.profile }}";
+                moreBtn.style.display = "none";
+            });
+        } else {
+            moreBtn.style.display = "none";
+        }
+    });
+</script>
+<script src="{% static 'main/js/account.js' %}"></script>
+{% endblock %}
